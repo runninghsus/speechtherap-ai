@@ -14,6 +14,8 @@ dependencies:
   - ncurses=6.3
   - openssl=1.1.1s
   - pip=22.2.2
+  - portaudio=19.6.0
+  - pyaudio=0.2.11
   - python=3.9.0
   - readline=8.2
   - setuptools=65.5.0
@@ -47,7 +49,6 @@ dependencies:
     - pillow==9.3.0
     - protobuf==3.20.3
     - pyarrow==10.0.0
-    - pyaudio==0.2.12
     - pydeck==0.8.0
     - pygments==2.13.0
     - pympler==1.0.1
