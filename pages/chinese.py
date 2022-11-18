@@ -1,6 +1,15 @@
 import pandas as pd
 import streamlit as st
 
+
+hide_streamlit_style = """
+            <style>
+
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 st.title("Chinese speech therapy assisted by AI")
 # st.sidebar.markdown("Chinese")
 
@@ -107,3 +116,10 @@ if st.button('跟著我重複!'):
 
     except KeyboardInterrupt:
         pass
+
+bottom_cont = st.container()
+with bottom_cont:
+    st.markdown("""---""")
+    st.write('')
+    st.markdown('<span style="color:grey">{}</span>'.format('Speech TherapAI is developed by Alexander I. Hsu'),
+                unsafe_allow_html=True)

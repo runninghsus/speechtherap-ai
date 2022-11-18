@@ -1,5 +1,13 @@
 import streamlit as st
 
+hide_streamlit_style = """
+            <style>
+
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 st.title("English speech therapy assisted by AI")
 
 import speech_recognition as sr
@@ -51,3 +59,10 @@ if st.button('repeat after me!'):
 
     except KeyboardInterrupt:
         pass
+
+bottom_cont = st.container()
+with bottom_cont:
+    st.markdown("""---""")
+    st.write('')
+    st.markdown('<span style="color:grey">{}</span>'.format('Speech TherapAI is developed by Alexander I. Hsu'),
+                unsafe_allow_html=True)
