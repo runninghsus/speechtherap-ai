@@ -1,7 +1,6 @@
 import streamlit as st
 
-st.markdown("# English speech recognition")
-st.sidebar.markdown("# English speech")
+st.title("English speech therapy assisted by AI")
 
 import speech_recognition as sr
 
@@ -15,8 +14,11 @@ import regex as re
 from translate import Translator
 
 
-text_2_repeat = st.text_input('input text')
-st.success(text_2_repeat)
+text_2_repeat = st.text_input('input english text you wish to practice')
+if text_2_repeat:
+    st.success(text_2_repeat)
+else:
+    st.warning('please enter english text you would like to practice with')
 colL, colR = st.columns(2)
 
 if st.button('repeat after me!'):

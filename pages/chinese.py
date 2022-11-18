@@ -1,8 +1,8 @@
 import pandas as pd
 import streamlit as st
 
-st.markdown("# Chinese speech recognition")
-st.sidebar.markdown("# Chinese speech")
+st.title("Chinese speech therapy assisted by AI")
+# st.sidebar.markdown("Chinese")
 
 import speech_recognition as sr
 
@@ -23,10 +23,15 @@ punc = "！？｡。＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［
 # re.sub(ur"[%s]+" %punc, "", line.decode("utf-8"))
 
 
-text_2_trans = st.text_input('input text to be translated in chinese')
+text_2_trans = st.text_input('請輸入英文句子，此網頁會翻譯成中文讓你對著練習')
 translator= Translator(to_lang="zh")
-text_2_repeat = translator.translate(text_2_trans)
-st.success(text_2_repeat)
+if text_2_trans:
+    text_2_repeat = translator.translate(text_2_trans)
+    # if text_2_repeat is None:
+
+    st.success(text_2_repeat)
+else:
+    st.warning('請輸入你想要練習的中文，此網頁會幫你英翻中')
 # uploaded_file = st.file_uploader('Choose your .pdf file', type="pdf")
 # if uploaded_file is not None:
 #     # Launch pdf reader object
