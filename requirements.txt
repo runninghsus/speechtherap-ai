@@ -4,7 +4,6 @@ blinker==1.5
 CacheControl==0.12.11
 cachetools==5.2.0
 cachy==0.3.0
-certifi @ file:///C:/b/abs_ac29jvt43w/croot/certifi_1665076682579/work/certifi
 charset-normalizer==2.1.1
 cleo==0.8.1
 click==8.1.3
