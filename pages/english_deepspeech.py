@@ -74,7 +74,7 @@ an open speech-to-text engine.
 
 A pre-trained model released with
 [v0.9.3](https://github.com/mozilla/DeepSpeech/releases/tag/v0.9.3),
-trained on Mandarin Chinese is being served.
+trained on American English is being served.
 """
     )
 
