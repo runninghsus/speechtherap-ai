@@ -58,7 +58,6 @@ with colL:
         var recognition = new webkitSpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
-        recognition.lang = "zh-CN";
         recognition.onresult = function (e) {
             var value = "";
             for (var i = e.resultIndex; i < e.results.length; ++i) {
