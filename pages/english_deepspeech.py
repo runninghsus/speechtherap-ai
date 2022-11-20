@@ -82,12 +82,12 @@ trained on Mandarin Chinese is being served.
 
     MODEL_URL = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm"  # noqa
     LANG_MODEL_URL = "https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer"  # noqa
-    MODEL_LOCAL_PATH = HERE / "models/deepspeech-0.9.3-models.pbmm"
-    LANG_MODEL_LOCAL_PATH = HERE / "models/deepspeech-0.9.3-models.scorer"
+    MODEL_LOCAL_PATH = HERE / "models/deepspeech-0.9.3-models-zh-CN.pbmm"
+    LANG_MODEL_LOCAL_PATH = HERE / "models/deepspeech-0.9.3-models-zh-CN.scorer"
     # if not HERE / "models/deepspeech-0.9.3-models-zh-CN.pbmm":
-    if not HERE / "models/deepspeech-0.9.3-models.pbmm":
-        download_file(MODEL_URL, MODEL_LOCAL_PATH, expected_size=188915987)
-        download_file(LANG_MODEL_URL, LANG_MODEL_LOCAL_PATH, expected_size=953363776)
+    # if not HERE / "models/deepspeech-0.9.3-models.pbmm":
+    download_file(MODEL_URL, MODEL_LOCAL_PATH, expected_size=188915987)
+    download_file(LANG_MODEL_URL, LANG_MODEL_LOCAL_PATH, expected_size=953363776)
 
     lm_alpha = 0.931289039105002
     lm_beta = 1.1834137581510284
@@ -111,7 +111,7 @@ def app_sst(model_path: str, lm_path: str, lm_alpha: float, lm_beta: float, beam
     webrtc_ctx = webrtc_streamer(
         key="speech-to-text",
         mode=WebRtcMode.SENDONLY,
-        audio_receiver_size=1024,
+        audio_receiver_size=2048,
         rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
         media_stream_constraints={"video": False, "audio": True},
     )
