@@ -1,6 +1,8 @@
 import pandas as pd
 import streamlit as st
+import os
 
+import streamlit.components.v1 as components
 
 hide_streamlit_style = """
             <style>
@@ -23,6 +25,10 @@ import random
 import pandas as pd
 import regex as re
 from translate import Translator
+
+parent_dir = os.path.dirname(os.path.abspath(__file__))
+build_dir = os.path.join(parent_dir, "../st_audiorec/frontend/build")
+st_audiorec = components.declare_component("st_audiorec", path=build_dir)
 
 
 def remove_punctuation(text):
@@ -85,37 +91,143 @@ else:
     # with open("./test.txt", "w") as text_file:
     #     text_file.write(text_2_repeat)
 
-colL, colR = st.columns(2)
-if st.button('跟著我重複!'):
-    colL.info(text_2_repeat)
-    try:
-        colR.info("A moment of silence, please...")
-        with m as source: r.adjust_for_ambient_noise(source)
-        colR.info("Set minimum energy threshold to {}".format(r.energy_threshold))
-        while True:
-            with st.empty():
-                colR.write("Say something!")
-                with m as source: audio = r.listen(source)
-                colR.success("Got it! Now to recognize it...")
-                try:
-                    # recognize speech using Google Speech Recognition
-                    value = r.recognize_google(audio, language="zh-CN")
-                    # value = r.recognize_whisper(audio, language="chinese")
-                    # we need some special handling here to correctly print unicode characters to standard output
-                    if str is bytes:  # this version of Python uses bytes for strings (Python 2)
-                        colR.write(u"You said {}".format(value).encode("utf-8"))
-                    else:  # this version of Python uses unicode for strings (Python 3+)
-                        colR.write("You said {}".format(value))
-                except sr.UnknownValueError:
-                    colR.warning("Oops! Didn't catch that")
-                except sr.RequestError as e:
-                    colR.error("Uh oh! Couldn't request results from Google Speech Recognition service; {0}".format(e))
-                if value == remove_punctuation(text_2_repeat):
-                    st.success('非常好!')
-                    break
+colL, colM, colR = st.columns([1, 3, 1])
+import streamlit as st
+from bokeh.models.widgets import Button
+from bokeh.models import CustomJS
+from streamlit_bokeh_events import streamlit_bokeh_events
 
-    except KeyboardInterrupt:
-        pass
+
+with colR:
+    stt_button2 = Button(label="停止!", width=125, button_type="danger")
+    stt_button2.js_on_event("button_click", CustomJS(code="""
+        var recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = "zh-CN";
+        recognition.onresult = function (e) {
+            var value = "";
+            for (var i = e.resultIndex; i < e.results.length; ++i) {
+                if (e.results[i].isFinal) {
+                    value += e.results[i][0].transcript;
+                }
+            }
+            if ( value != "") {
+                document.dispatchEvent(new CustomEvent("GET_TEXT2", {detail: value}));
+            }
+        }
+        recognition.start();
+        recognition.stop();
+        """))
+
+    result2 = streamlit_bokeh_events(
+        stt_button2,
+        events="GET_TEXT2",
+        key="listen2",
+        refresh_on_update=False,
+        override_height=45,
+        debounce_time=0)
+
+
+
+
+with colL:
+    stt_button = Button(label="跟著我重複!", width=125, button_type="primary")
+
+    stt_button.js_on_event("button_click", CustomJS(code="""
+        var recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = "zh-CN";
+        recognition.onresult = function (e) {
+            var value = "";
+            for (var i = e.resultIndex; i < e.results.length; ++i) {
+                if (e.results[i].isFinal) {
+                    value += e.results[i][0].transcript;
+                }
+            }
+            if ( value != "") {
+                document.dispatchEvent(new CustomEvent("GET_TEXT", {detail: value}));
+            }
+        }
+        recognition.start();
+        """))
+
+
+
+    result = streamlit_bokeh_events(
+        stt_button,
+        events="GET_TEXT",
+        key="listen",
+        refresh_on_update=False,
+        override_height=45,
+        debounce_time=0)
+
+    if result:
+        if "GET_TEXT" in result:
+            colM.info(f"你說了:  {result.get('GET_TEXT')}")
+            if result.get("GET_TEXT") == remove_punctuation(text_2_repeat):
+                colM.success('非常好!')
+                result = None
+            else:
+                colM.error('繼續加油!')
+
+
+
+    # stop_button = colR.button('停止')
+
+
+
+# from bokeh.models.widgets import Button
+# from bokeh.models import CustomJS
+#
+# text = st.text_input("Say what ?")
+#
+# tts_button = Button(label="Speak", width=100)
+#
+# tts_button.js_on_event("button_click", CustomJS(code=f"""
+#     var u = new SpeechSynthesisUtterance();
+#     u.text = "{text}";
+#     u.lang = 'zh-CN';
+#
+#     speechSynthesis.speak(u);
+#     """))
+#
+# st.bokeh_chart(tts_button)
+
+# st.bokeh_chart(tts_button)
+# if st.button('跟著我重複!'):
+#     colL.info(text_2_repeat)
+    # st_audiorec()
+
+    # try:
+    #     colR.info("A moment of silence, please...")
+    #     with m as source: r.adjust_for_ambient_noise(source)
+    #     colR.info("Set minimum energy threshold to {}".format(r.energy_threshold))
+    #     while True:
+    #         with st.empty():
+    #             colR.write("Say something!")
+    #             with m as source: audio = r.listen(source)
+    #             colR.success("Got it! Now to recognize it...")
+    #             try:
+    #                 # recognize speech using Google Speech Recognition
+    #                 value = r.recognize_google(audio, language="zh-CN")
+    #                 # value = r.recognize_whisper(audio, language="chinese")
+    #                 # we need some special handling here to correctly print unicode characters to standard output
+    #                 if str is bytes:  # this version of Python uses bytes for strings (Python 2)
+    #                     colR.write(u"You said {}".format(value).encode("utf-8"))
+    #                 else:  # this version of Python uses unicode for strings (Python 3+)
+    #                     colR.write("You said {}".format(value))
+    #             except sr.UnknownValueError:
+    #                 colR.warning("Oops! Didn't catch that")
+    #             except sr.RequestError as e:
+    #                 colR.error("Uh oh! Couldn't request results from Google Speech Recognition service; {0}".format(e))
+    #             if value == remove_punctuation(text_2_repeat):
+    #                 st.success('非常好!')
+    #                 break
+    #
+    # except KeyboardInterrupt:
+    #     pass
 
 bottom_cont = st.container()
 with bottom_cont:
